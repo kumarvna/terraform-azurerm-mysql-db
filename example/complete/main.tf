@@ -54,28 +54,20 @@ module "mssql-server" {
   # log analytic workspace name required
   enable_log_monitoring        = true
   log_analytics_workspace_name = "loganalytics-we-sharedtest2"
-
+*/
   # Firewall Rules to allow azure and external clients and specific Ip address/ranges. 
-  enable_firewall_rules = true
-  firewall_rules = [
-    {
-      name             = "access-to-azure"
+
+  firewall_rules = {
+    access-to-azure = {
       start_ip_address = "0.0.0.0"
       end_ip_address   = "0.0.0.0"
     },
-    {
-      name             = "desktop-ip"
-      start_ip_address = "49.204.225.49"
-      end_ip_address   = "49.204.225.49"
+    desktop-ip = {
+      start_ip_address = "49.204.228.223"
+      end_ip_address   = "49.204.228.223"
     }
-  ]
+  }
 
-  # Create and initialize a database with custom SQL script
-  # need sqlcmd utility to run this command
-  # your desktop public IP must be added firewall rules to run this command 
-  initialize_sql_script_execution = true
-  sqldb_init_script_file          = "../artifacts/db-init-sample.sql"
-*/
   # Tags for Azure Resources
   tags = {
     Terraform   = "true"

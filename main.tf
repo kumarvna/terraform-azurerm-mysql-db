@@ -131,3 +131,13 @@ resource "azurerm_mysql_configuration" "main" {
   server_name         = azurerm_mysql_server.main.name
   value               = each.value
 }
+
+resource "azurerm_mysql_firewall_rule" "main" {
+  for_each            = var.firewall_rules != null ? { for k, v in var.firewall_rules : k => v if v != null } : {}
+  name                = format("%s", each.key)
+  resource_group_name = local.resource_group_name
+  server_name         = azurerm_mysql_server.main.name
+  start_ip_address    = each.value["start_ip_address"]
+  end_ip_address      = each.value["end_ip_address"]
+}
+
