@@ -55,6 +55,10 @@ variable "mysqlserver_settings" {
     public_network_access_enabled     = optional(bool)
     ssl_enforcement_enabled           = bool
     ssl_minimal_tls_version_enforced  = optional(string)
+    database_name                     = string
+    charset                           = string
+    collation                         = string
+
   })
 }
 

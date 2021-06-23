@@ -1,7 +1,8 @@
 module "mssql-server" {
   //  source  = "kumarvna/mysql-db/azurerm"
   //  version = "1.0.0"
-  source = "../../"
+  //source = "../../"
+  source = "github.com/kumarvna/terraform-azurerm-mysql-db?ref=develop"
 
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
@@ -14,9 +15,14 @@ module "mssql-server" {
   # 
   mysqlserver_name = "mysqldbserver01"
   mysqlserver_settings = {
-    sku_name                          = "B_Gen5_2"
-    storage_mb                        = 5120
-    version                           = "5.7"
+    sku_name   = "B_Gen5_2"
+    storage_mb = 5120
+    version    = "5.7"
+    # Database name, charset and collection arguments  
+    database_name = "mydemomysqldb"
+    charset       = "utf8"
+    collation     = "utf8_unicode_ci"
+    # Storage Profile and other optional arguments
     auto_grow_enabled                 = true
     backup_retention_days             = 7
     geo_redundant_backup_enabled      = false

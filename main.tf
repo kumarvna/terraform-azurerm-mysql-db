@@ -2,6 +2,11 @@ locals {
   resource_group_name                = element(coalescelist(data.azurerm_resource_group.rgrp.*.name, azurerm_resource_group.rg.*.name, [""]), 0)
   location                           = element(coalescelist(data.azurerm_resource_group.rgrp.*.location, azurerm_resource_group.rg.*.location, [""]), 0)
   if_threat_detection_policy_enabled = var.enable_threat_detection_policy ? [{}] : []
+  mysqlserver_settings = defaults(var.mysqlserver_settings, {
+    charset   = "utf8"
+    collation = "utf8_unicode_ci"
+  })
+
 }
 
 #---------------------------------------------------------
@@ -111,3 +116,10 @@ resource "azurerm_mysql_server" "main" {
   }
 }
 
+resource "azurerm_mysql_database" "main" {
+  name                = var.mysqlserver_settings.database_name
+  resource_group_name = local.resource_group_name
+  server_name         = azurerm_mysql_server.example.name
+  charset             = "utf8"
+  collation           = "utf8_unicode_ci"
+}
