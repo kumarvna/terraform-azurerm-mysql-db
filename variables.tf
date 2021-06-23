@@ -58,7 +58,6 @@ variable "mysqlserver_settings" {
     database_name                     = string
     charset                           = string
     collation                         = string
-
   })
 }
 
@@ -87,6 +86,12 @@ variable "disabled_alerts" {
 variable "log_retention_days" {
   description = "Specifies the number of days to keep in the Threat Detection audit logs"
   default     = "30"
+}
+
+variable "mysql_configuration" {
+  description = "Sets a MySQL Configuration value on a MySQL Server"
+  type        = map(string)
+  default     = {}
 }
 
 variable "tags" {

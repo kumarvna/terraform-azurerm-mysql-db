@@ -32,6 +32,9 @@ module "mssql-server" {
     ssl_minimal_tls_version_enforced  = "TLS1_2"
   }
 
+  mysql_configuration = {
+    interactive_timeout = "600"
+  }
   # SQL server extended auditing policy defaults to `true`. 
   # To turn off set enable_sql_server_extended_auditing_policy to `false`  
   # DB extended auditing policy defaults to `false`. 

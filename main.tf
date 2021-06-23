@@ -119,7 +119,15 @@ resource "azurerm_mysql_server" "main" {
 resource "azurerm_mysql_database" "main" {
   name                = var.mysqlserver_settings.database_name
   resource_group_name = local.resource_group_name
-  server_name         = azurerm_mysql_server.example.name
-  charset             = "utf8"
-  collation           = "utf8_unicode_ci"
+  server_name         = azurerm_mysql_server.main.name
+  charset             = var.mysqlserver_settings.charset
+  collation           = var.mysqlserver_settings.collation
+}
+
+resource "azurerm_mysql_configuration" "main" {
+  for_each            = var.mysql_configuration
+  name                = each.key
+  resource_group_name = local.resource_group_name
+  server_name         = azurerm_mysql_server.main.name
+  value               = each.value
 }
