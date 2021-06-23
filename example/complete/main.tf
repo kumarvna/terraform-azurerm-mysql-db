@@ -33,16 +33,16 @@ module "mssql-server" {
   }
 
   mysql_configuration = {
-    interactive_timeout     = "600"
+    interactive_timeout = "600"
   }
   # SQL server extended auditing policy defaults to `true`. 
   # To turn off set enable_sql_server_extended_auditing_policy to `false`  
   # DB extended auditing policy defaults to `false`. 
   # to tun on set the variable `enable_database_extended_auditing_policy` to `true` 
   # To enable Azure Defender for database set `enable_threat_detection_policy` to true 
-  enable_threat_detection_policy = false
-  #log_retention_days             = 30
-  #email_addresses_for_alerts     = ["user@example.com", "firstname.lastname@example.com"]
+  enable_threat_detection_policy = true
+  log_retention_days             = 30
+  email_addresses_for_alerts     = ["user@example.com", "firstname.lastname@example.com"]
 
   /*  # AD administrator for an Azure SQL server
   # Allows you to set a user or group as the AD administrator for an Azure SQL server

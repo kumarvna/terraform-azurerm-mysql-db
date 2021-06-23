@@ -103,6 +103,11 @@ variable "firewall_rules" {
   default = null
 }
 
+variable "ad_admin_login_name" {
+  description = "The login name of the principal to set as the server administrator"
+  default     = null
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
