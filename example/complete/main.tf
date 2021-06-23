@@ -44,10 +44,11 @@ module "mssql-server" {
   log_retention_days             = 30
   email_addresses_for_alerts     = ["user@example.com", "firstname.lastname@example.com"]
 
-  /*  # AD administrator for an Azure SQL server
+  # AD administrator for an Azure SQL server
   # Allows you to set a user or group as the AD administrator for an Azure SQL server
   ad_admin_login_name = "firstname.lastname@example.com"
 
+  /*
   # (Optional) To enable Azure Monitoring for Azure SQL database including audit logs
   # log analytic workspace name required
   enable_log_monitoring        = true
