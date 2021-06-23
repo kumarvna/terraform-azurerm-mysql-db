@@ -33,7 +33,9 @@ module "mssql-server" {
   }
 
   mysql_configuration = {
-    interactive_timeout = "600"
+    interactive_timeout     = "600"
+    abort-slave-event-count = "0"
+    allow-suspicious-udfs   = "FALSE"
   }
   # SQL server extended auditing policy defaults to `true`. 
   # To turn off set enable_sql_server_extended_auditing_policy to `false`  
