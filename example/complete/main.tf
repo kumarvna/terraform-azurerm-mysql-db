@@ -40,9 +40,9 @@ module "mssql-server" {
   # DB extended auditing policy defaults to `false`. 
   # to tun on set the variable `enable_database_extended_auditing_policy` to `true` 
   # To enable Azure Defender for database set `enable_threat_detection_policy` to true 
-  enable_threat_detection_policy = true
-  log_retention_days             = 30
-  email_addresses_for_alerts     = ["user@example.com", "firstname.lastname@example.com"]
+  enable_threat_detection_policy = false
+  #log_retention_days             = 30
+  #email_addresses_for_alerts     = ["user@example.com", "firstname.lastname@example.com"]
 
   # AD administrator for an Azure SQL server
   # Allows you to set a user or group as the AD administrator for an Azure SQL server
