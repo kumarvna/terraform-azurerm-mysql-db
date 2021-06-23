@@ -1,3 +1,7 @@
+#------------------------------------------------------------
+# Local configuration - Default (required). 
+#------------------------------------------------------------
+
 locals {
   resource_group_name                = element(coalescelist(data.azurerm_resource_group.rgrp.*.name, azurerm_resource_group.rg.*.name, [""]), 0)
   location                           = element(coalescelist(data.azurerm_resource_group.rgrp.*.location, azurerm_resource_group.rg.*.location, [""]), 0)
@@ -12,6 +16,8 @@ locals {
 #---------------------------------------------------------
 # Resource Group Creation or selection - Default is "false"
 #----------------------------------------------------------
+data "azurerm_client_config" "current" {}
+
 data "azurerm_resource_group" "rgrp" {
   count = var.create_resource_group == false ? 1 : 0
   name  = var.resource_group_name
@@ -59,10 +65,6 @@ resource "azurerm_storage_account" "storeacc" {
   tags                      = merge({ "Name" = format("%s", "stsqlauditlogs") }, var.tags, )
 }
 
-#----------------------------------------
-# MySQL servers
-#----------------------------------------
-
 resource "random_password" "main" {
   count       = var.admin_password == null ? 1 : 0
   length      = var.random_password_length
@@ -76,8 +78,10 @@ resource "random_password" "main" {
   }
 }
 
+#----------------------------------------------------------------
+# Adding  MySQL Server creation and settings - Default is "True"
+#-----------------------------------------------------------------
 resource "azurerm_mysql_server" "main" {
-  #  for_each                          = var.mysqlserver_settings
   name                              = format("%s", var.mysqlserver_name)
   resource_group_name               = local.resource_group_name
   location                          = local.location
@@ -116,6 +120,9 @@ resource "azurerm_mysql_server" "main" {
   }
 }
 
+#------------------------------------------------------------
+# Adding  MySQL Server Database - Default is "true"
+#------------------------------------------------------------
 resource "azurerm_mysql_database" "main" {
   name                = var.mysqlserver_settings.database_name
   resource_group_name = local.resource_group_name
@@ -124,14 +131,20 @@ resource "azurerm_mysql_database" "main" {
   collation           = var.mysqlserver_settings.collation
 }
 
+#------------------------------------------------------------
+# Adding  MySQL Server Parameters - Default is "false"
+#------------------------------------------------------------
 resource "azurerm_mysql_configuration" "main" {
-  for_each            = var.mysql_configuration
+  for_each            = var.mysql_configuration != null ? { for k, v in var.mysql_configuration : k => v if v != null } : {}
   name                = each.key
   resource_group_name = local.resource_group_name
   server_name         = azurerm_mysql_server.main.name
   value               = each.value
 }
 
+#------------------------------------------------------------
+# Adding Firewall rules for MySQL Server - Default is "false"
+#------------------------------------------------------------
 resource "azurerm_mysql_firewall_rule" "main" {
   for_each            = var.firewall_rules != null ? { for k, v in var.firewall_rules : k => v if v != null } : {}
   name                = format("%s", each.key)
@@ -141,3 +154,14 @@ resource "azurerm_mysql_firewall_rule" "main" {
   end_ip_address      = each.value["end_ip_address"]
 }
 
+#----------------------------------------------------------
+# Adding AD Admin to MySQL Server - Default is "false"
+#----------------------------------------------------------
+resource "azurerm_mysql_active_directory_administrator" "example" {
+  count               = var.ad_admin_login_name != null ? 1 : 0
+  server_name         = azurerm_mysql_server.main.name
+  resource_group_name = local.resource_group_name
+  login               = var.ad_admin_login_name
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+  object_id           = data.azurerm_client_config.current.object_id
+}
