@@ -108,6 +108,16 @@ variable "ad_admin_login_name" {
   default     = null
 }
 
+variable "key_vault_key_id" {
+  description = "The URL to a Key Vault Key"
+  default     = null
+}
+
+variable "extaudit_diag_logs" {
+  description = "Database Monitoring Category details for Azure Diagnostic setting"
+  default     = ["MySqlSlowLogs", "MySqlAuditLogs"]
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)

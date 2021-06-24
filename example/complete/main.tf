@@ -1,8 +1,6 @@
 module "mssql-server" {
-  //  source  = "kumarvna/mysql-db/azurerm"
-  //  version = "1.0.0"
-  //source = "../../"
-  source = "github.com/kumarvna/terraform-azurerm-mysql-db?ref=develop"
+  source  = "kumarvna/mysql-db/azurerm"
+  version = "1.0.0"
 
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
@@ -12,8 +10,8 @@ module "mssql-server" {
   location              = "westeurope"
 
   # MySQL Server and Database settings
-  # 
   mysqlserver_name = "roshmysqldbsrv01"
+  
   mysqlserver_settings = {
     sku_name   = "B_Gen5_2"
     storage_mb = 5120
@@ -32,28 +30,20 @@ module "mssql-server" {
     ssl_minimal_tls_version_enforced  = "TLS1_2"
   }
 
+  # MySQL Server Parameters
+  # For more information: https://docs.microsoft.com/en-us/azure/mysql/concepts-server-parameters
   mysql_configuration = {
     interactive_timeout = "600"
   }
-  # SQL server extended auditing policy defaults to `true`. 
-  # To turn off set enable_sql_server_extended_auditing_policy to `false`  
-  # DB extended auditing policy defaults to `false`. 
-  # to tun on set the variable `enable_database_extended_auditing_policy` to `true` 
-  # To enable Azure Defender for database set `enable_threat_detection_policy` to true 
-  enable_threat_detection_policy = false
-  #log_retention_days             = 30
-  #email_addresses_for_alerts     = ["user@example.com", "firstname.lastname@example.com"]
 
   # AD administrator for an Azure SQL server
   # Allows you to set a user or group as the AD administrator for an Azure SQL server
   ad_admin_login_name = "firstname.lastname@example.com"
 
-  /*
-  # (Optional) To enable Azure Monitoring for Azure SQL database including audit logs
-  # log analytic workspace name required
-  enable_log_monitoring        = true
+  # (Optional) To enable Azure Monitoring for Azure MySQL database
+  # (Optional) Specify `storage_account_name` to save monitoring logs to storage. 
   log_analytics_workspace_name = "loganalytics-we-sharedtest2"
-*/
+
   # Firewall Rules to allow azure and external clients and specific Ip address/ranges. 
 
   firewall_rules = {
