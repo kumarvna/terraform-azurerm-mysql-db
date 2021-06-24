@@ -163,3 +163,12 @@ resource "azurerm_mysql_active_directory_administrator" "example" {
   tenant_id           = data.azurerm_client_config.current.tenant_id
   object_id           = data.azurerm_client_config.current.object_id
 }
+
+#------------------------------------------------------------------------
+# Manages a Customer Managed Key for a MySQL Server. - Default is "false"
+#------------------------------------------------------------------------
+resource "azurerm_mysql_server_key" "example" {
+  count            = var.key_vault_key_id != null ? 1 : 0
+  server_id        = azurerm_mysql_server.main.id
+  key_vault_key_id = var.key_vault_key_id
+}
