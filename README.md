@@ -95,9 +95,7 @@ module "mssql-server" {
 }
 ```
 
-## Advanced Usage of the Module
-
-### `mysql_setttings` - Setting up your MySQL Server
+## `mysql_setttings` - Setting up your MySQL Server
 
 This object helps you setup desired MySQL server and support following arguments.
 
@@ -118,6 +116,8 @@ This object helps you setup desired MySQL server and support following arguments
 `ssl_enforcement_enabled`|Specifies if SSL should be enforced on connections. Possible values are `true` and `false`
 `ssl_minimal_tls_version_enforced`|The minimum TLS version to support on the sever. Possible values are `TLSEnforcementDisabled`, `TLS1_0`, `TLS1_1`, and `TLS1_2`. Defaults to `TLSEnforcementDisabled`.
 
+## Advanced Usage of the Module
+
 ### `mysql_configuration` - Configure MySQl Server Parameters
 
 The MySQL server maintains many system variables that configure its operation. Each system variable has a default value. System variables can be set at server startup using options on the command line or in an option file. Most of them can be changed dynamically at runtime using the SET statement, which enables you to modify operation of the server without having to stop and restart it. You can also use system variable values in expressions.
@@ -133,8 +133,6 @@ A few Supported parameters are here for your reference. you can find all these `
 `lock_wait_timeout`|This variable specifies the timeout in seconds for attempts to acquire metadata locks. Allowed value should be: `1`-`31536000`|Dynamic|`31536000`
 `max_connections`|The maximum permitted number of simultaneous client connections. Allowed value should be: `10`-`5000`|Dynamic|`2500`
 `time_zone`|The server time zone.|Dynamic|`SYSTEM`
-| terraform | >= 0.13   |
-| azurerm   | >= 2.59.0 |
 
 ### MySQL Virtual Network Rule
 
@@ -178,11 +176,19 @@ Tag names are case-insensitive for operations. A tag with a tag name, regardless
 
 An effective naming convention assembles resource names by using important resource information as parts of a resource's name. For example, using these [recommended naming conventions](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging#example-names), a public IP resource for a production SharePoint workload is named like this: `pip-sharepoint-prod-westus-001`.
 
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.13 |
+| azurerm | >= 2.59.0 |
+
 ## Providers
 
-| Name    | Version   |
-| ------- | --------- |
+| Name | Version |
+|------|---------|
 | azurerm | >= 2.59.0 |
+| random |>= 3.1.0 |
 
 ## Inputs
 
