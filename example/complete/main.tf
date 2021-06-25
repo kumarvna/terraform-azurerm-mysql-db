@@ -1,7 +1,7 @@
 module "mssql-server" {
-  //  source  = "kumarvna/mysql-db/azurerm"
-  // version = "1.0.0"
-  source = "../../"
+  source  = "kumarvna/mysql-db/azurerm"
+  version = "1.0.0"
+
   # By default, this module will create a resource group
   # proivde a name to use an existing resource group and set the argument 
   # to `create_resource_group = false` if you want to existing resoruce group. 
@@ -57,7 +57,6 @@ module "mssql-server" {
   log_analytics_workspace_name = "loganalytics-we-sharedtest2"
 
   # Firewall Rules to allow azure and external clients and specific Ip address/ranges. 
-
   firewall_rules = {
     access-to-azure = {
       start_ip_address = "0.0.0.0"

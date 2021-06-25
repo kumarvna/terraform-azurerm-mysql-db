@@ -55,7 +55,7 @@ module "mssql-server" {
   log_retention_days             = 30
   email_addresses_for_alerts     = ["user@example.com", "firstname.lastname@example.com"]
 
-  # AD administrator for an Azure SQL server
+  # AD administrator for an Azure MySQL server
   # Allows you to set a user or group as the AD administrator for an Azure SQL server
   ad_admin_login_name = "firstname.lastname@example.com"
 
@@ -64,7 +64,6 @@ module "mssql-server" {
   log_analytics_workspace_name = "loganalytics-we-sharedtest2"
 
   # Firewall Rules to allow azure and external clients and specific Ip address/ranges. 
-
   firewall_rules = {
     access-to-azure = {
       start_ip_address = "0.0.0.0"
