@@ -18,3 +18,18 @@ output "storage_account_name" {
   value       = element(concat(azurerm_storage_account.storeacc.*.name, [""]), 0)
 }
 
+output "mysql_server_id" {
+  description = "The resource ID of the MySQL Server"
+  value       = azurerm_mysql_server.main.id
+}
+
+output "mysql_server_fqdn" {
+  description = "The FQDN of the MySQL Server"
+  value       = azurerm_mysql_server.main.fqdn
+}
+
+output "mysql_database_id" {
+  description = "The resource ID of the MySQL Database"
+  value       = azurerm_mysql_database.main.id
+}
+

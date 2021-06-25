@@ -13,6 +13,11 @@ variable "location" {
   default     = ""
 }
 
+variable "subnet_id" {
+  description = "The resource ID of the subnet"
+  default     = ""
+}
+
 variable "log_analytics_workspace_name" {
   description = "The name of log analytics workspace name"
   default     = null
@@ -24,7 +29,7 @@ variable "random_password_length" {
 }
 
 variable "mysqlserver_name" {
-  description = "SQL server Name"
+  description = "MySQL server Name"
   default     = ""
 }
 
@@ -44,6 +49,7 @@ variable "identity" {
 }
 
 variable "mysqlserver_settings" {
+  description = "MySQL server settings"
   type = object({
     sku_name                          = string
     version                           = string
@@ -67,7 +73,7 @@ variable "storage_account_name" {
 }
 
 variable "enable_threat_detection_policy" {
-  description = ""
+  description = "Threat detection policy configuration, known in the API as Server Security Alerts Policy"
   default     = false
 }
 

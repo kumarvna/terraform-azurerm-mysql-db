@@ -1,7 +1,7 @@
 module "mssql-server" {
-  source  = "kumarvna/mysql-db/azurerm"
-  version = "1.0.0"
-
+  //  source  = "kumarvna/mysql-db/azurerm"
+  // version = "1.0.0"
+  source = "../../"
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
   # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
@@ -11,9 +11,9 @@ module "mssql-server" {
 
   # MySQL Server and Database settings
   mysqlserver_name = "roshmysqldbsrv01"
-  
+
   mysqlserver_settings = {
-    sku_name   = "B_Gen5_2"
+    sku_name   = "GP_Gen5_16"
     storage_mb = 5120
     version    = "5.7"
     # Database name, charset and collection arguments  
@@ -36,9 +36,22 @@ module "mssql-server" {
     interactive_timeout = "600"
   }
 
+  # Use Virtual Network service endpoints and rules for Azure Database for MySQL
+  subnet_id = var.subnet_id
+
+  # The URL to a Key Vault custom managed key
+  key_vault_key_id = var.key_vault_key_id
+
+  # To enable Azure Defender for database set `enable_threat_detection_policy` to true 
+  enable_threat_detection_policy = true
+  log_retention_days             = 30
+  email_addresses_for_alerts     = ["user@example.com", "firstname.lastname@example.com"]
+
   # AD administrator for an Azure SQL server
   # Allows you to set a user or group as the AD administrator for an Azure SQL server
   ad_admin_login_name = "firstname.lastname@example.com"
+
+
 
   # (Optional) To enable Azure Monitoring for Azure MySQL database
   # (Optional) Specify `storage_account_name` to save monitoring logs to storage. 
