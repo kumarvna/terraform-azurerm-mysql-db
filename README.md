@@ -70,8 +70,6 @@ module "mssql-server" {
   # Allows you to set a user or group as the AD administrator for an Azure SQL server
   ad_admin_login_name = "firstname.lastname@example.com"
 
-
-
   # (Optional) To enable Azure Monitoring for Azure MySQL database
   # (Optional) Specify `storage_account_name` to save monitoring logs to storage. 
   log_analytics_workspace_name = "loganalytics-we-sharedtest2"
@@ -108,9 +106,9 @@ This object helps you setup desired MySQL server and support following arguments
 |--|--|
 `sku_name`|Specifies the SKU Name for this MySQL Server. The name of the SKU, follows the tier + family + cores pattern (e.g. `B_Gen4_1`, `GP_Gen5_8`). Valid values are `B_Gen4_1`, `B_Gen4_2`, `B_Gen5_1`, `B_Gen5_2`, `GP_Gen4_2`, `GP_Gen4_4`, `GP_Gen4_8`, `GP_Gen4_16`, `GP_Gen4_32`, `GP_Gen5_2`, `GP_Gen5_4`, `GP_Gen5_8`, `GP_Gen5_16`, `GP_Gen5_32`, `GP_Gen5_64`, `MO_Gen5_2`, `MO_Gen5_4`, `MO_Gen5_8`, `MO_Gen5_16`, `MO_Gen5_32`.
 `storage_mb`|Max storage allowed for a server. Possible values are between `5120` MB(5GB) and `1048576` MB(1TB) for the Basic SKU and between `5120` MB(5GB) and `4194304` MB(4TB) for General Purpose/Memory Optimized SKUs.
-`version`|Specifies the version of MySQL to use. Valid values are `5.6`, `5.7`, and `8.0`. 
-`database_name`|Specifies the name of the MySQL Database, which needs [to be a valid MySQL identifier](https://dev.mysql.com/doc/refman/5.7/en/identifiers.html). 
-`charset`|Specifies the Charset for the MySQL Database, which needs [to be a valid MySQL Charset](https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html). 
+`version`|Specifies the version of MySQL to use. Valid values are `5.6`, `5.7`, and `8.0`.
+`database_name`|Specifies the name of the MySQL Database, which needs [to be a valid MySQL identifier](https://dev.mysql.com/doc/refman/5.7/en/identifiers.html).
+`charset`|Specifies the Charset for the MySQL Database, which needs [to be a valid MySQL Charset](https://dev.mysql.com/doc/refman/5.7/en/charset-charsets.html).
 `collation`|Specifies the Collation for the MySQL Database, which needs [to be a valid MySQL Collation](https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html).
 `administrator_login`|The Administrator Login for the MySQL Server. Required when `create_mode` is `Default`.
 `auto_grow_enabled`|Enable/Disable auto-growing of the storage. Storage auto-grow prevents your server from running out of storage and becoming read-only. If storage auto grow is enabled, the storage automatically grows without impacting the workload. The default value if not explicitly specified is `true`
@@ -125,7 +123,7 @@ This object helps you setup desired MySQL server and support following arguments
 
 The MySQL server maintains many system variables that configure its operation. Each system variable has a default value. System variables can be set at server startup using options on the command line or in an option file. Most of them can be changed dynamically at runtime using the SET statement, which enables you to modify operation of the server without having to stop and restart it. You can also use system variable values in expressions.
 
-A few Supported parameters are here for your reference. you can find all these `Server Paramter` section in MySQL server. Also check [MySQL website](https://dev.mysql.com/doc/refman/8.0/en/server-options.html) for more details. 
+A few Supported parameters are here for your reference. you can find all these `Server Paramter` section in MySQL server. Also check [MySQL website](https://dev.mysql.com/doc/refman/8.0/en/server-options.html) for more details.
 
 | Parameter name | Description | Parameter Type |Default Value
 |--|--|--|--|
@@ -136,19 +134,50 @@ A few Supported parameters are here for your reference. you can find all these `
 `lock_wait_timeout`|This variable specifies the timeout in seconds for attempts to acquire metadata locks. Allowed value should be: `1`-`31536000`|Dynamic|`31536000`
 `max_connections`|The maximum permitted number of simultaneous client connections. Allowed value should be: `10`-`5000`|Dynamic|`2500`
 `time_zone`|The server time zone.|Dynamic|`SYSTEM`
-
-### Virtual Network service endpoints and rules
-
-Virtual network rules are one firewall security feature that controls whether your Azure Database for MySQL server accepts communications that are sent from particular subnets in virtual networks.
-
-
-
-## Requirements
-
-| Name      | Version   |
-| --------- | --------- |
 | terraform | >= 0.13   |
 | azurerm   | >= 2.59.0 |
+
+### MySQL Virtual Network Rule
+
+A virtual network rule for your Azure Database for MySQL server is a subnet that is listed in the access control list (ACL) of your Azure Database for MySQL server. To be in the ACL for your Azure Database for MySQL server, the subnet must contain the **`Microsoft.Sql`** type name. To enable this feature, add a `subnet_id` with valid resource id.
+
+### Data Encryption with a Customer-managed Key
+
+Data encryption with customer-managed keys for Azure Database for MySQL enables you to bring your own key (BYOK) for data protection at rest. It also allows organizations to implement separation of duties in the management of keys and data.
+
+Data encryption is set at the server-level. The customer-managed key is an asymmetric key stored in a customer-owned and customer-managed Azure `Key Vault` instance. To add you own key from key valut use variable `key_vault_key_id` with valid key URL.
+
+### Server Firewall Rules
+
+Firewalls prevent all access to your database server until you specify which computers have permission. To configure a firewall, create firewall rules that specify ranges of acceptable IP addresses. You can create firewall rules at the server level with variable `firewall_rules` with valid IP addresses.
+
+### Active Directory Administrator
+
+This module supports for Azure Active Directory (Azure AD) integration for Azure Database for MySQL. This integration allows you to securely sign in to their database by using Azure Active Directory and to manage credentials in a central place. For consistent role management, manage database access using Active Directory groups. You can add AD user/group using `ad_admin_login_name` variable.  
+
+> Azure Active Directory authentication is only available for MySQL 5.7 and newer. Only one Azure AD administrator can be configured for a Azure Database for MySQL server at any time. Only an Azure AD administrator for MySQL can initially connect to the Azure Database for MySQL using an Azure Active Directory account.
+
+### Threat detection policy AKA Server Security Alerts Policy
+
+Advanced Threat Detection for Azure Database for MySQL server detects anomalous activities indicating unusual and potentially harmful attempts to access or exploit databases and it can trigger the following alerts:
+
+* Access from unusual location
+* Access from unusual Azure data center
+* Access from unfamiliar principal
+* Access from a potentially harmful application
+* Brute force login credentials
+
+Enable threat detection policy setting up the variables `enable_threat_detection_policy`, `log_retention_days` and `email_addresses_for_alerts` with valid values.
+
+## Recommended naming and tagging conventions
+
+Applying tags to your Azure resources, resource groups, and subscriptions to logically organize them into a taxonomy. Each tag consists of a name and a value pair. For example, you can apply the name `Environment` and the value `Production` to all the resources in production.
+For recommendations on how to implement a tagging strategy, see Resource naming and tagging decision guide.
+
+> **Important** :
+Tag names are case-insensitive for operations. A tag with a tag name, regardless of the casing, is updated or retrieved. However, the resource provider might keep the casing you provide for the tag name. You'll see that casing in cost reports. **Tag values are case-sensitive.**
+
+An effective naming convention assembles resource names by using important resource information as parts of a resource's name. For example, using these [recommended naming conventions](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging#example-names), a public IP resource for a production SharePoint workload is named like this: `pip-sharepoint-prod-westus-001`.
 
 ## Providers
 

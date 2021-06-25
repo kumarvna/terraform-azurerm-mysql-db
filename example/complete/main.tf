@@ -48,11 +48,9 @@ module "mssql-server" {
   log_retention_days             = 30
   email_addresses_for_alerts     = ["user@example.com", "firstname.lastname@example.com"]
 
-  # AD administrator for an Azure SQL server
+  # AD administrator for an Azure MySQL server
   # Allows you to set a user or group as the AD administrator for an Azure SQL server
   ad_admin_login_name = "firstname.lastname@example.com"
-
-
 
   # (Optional) To enable Azure Monitoring for Azure MySQL database
   # (Optional) Specify `storage_account_name` to save monitoring logs to storage. 
