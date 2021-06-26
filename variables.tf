@@ -119,6 +119,26 @@ variable "key_vault_key_id" {
   default     = null
 }
 
+variable "enable_private_endpoint" {
+  description = "Manages a Private Endpoint to Azure database for MySQL"
+  default     = false
+}
+
+variable "virtual_network_name" {
+  description = "The name of the virtual network"
+  default     = ""
+}
+
+variable "existing_private_dns_zone" {
+  description = "Name of the existing private DNS zone"
+  default     = null
+}
+
+variable "private_subnet_address_prefix" {
+  description = "The name of the subnet for private endpoints"
+  default     = null
+}
+
 variable "extaudit_diag_logs" {
   description = "Database Monitoring Category details for Azure Diagnostic setting"
   default     = ["MySqlSlowLogs", "MySqlAuditLogs"]

@@ -1,6 +1,7 @@
 module "mssql-server" {
-  source  = "kumarvna/mysql-db/azurerm"
-  version = "1.0.0"
+  // source  = "kumarvna/mysql-db/azurerm"
+  // version = "1.0.0"
+  source = "../../"
 
   # By default, this module will create a resource group
   # proivde a name to use an existing resource group and set the argument 
@@ -42,6 +43,10 @@ module "mssql-server" {
 
   # The URL to a Key Vault custom managed key
   key_vault_key_id = var.key_vault_key_id
+
+  enable_private_endpoint       = true
+  virtual_network_name          = "vnet-shared-hub-westeurope-001"
+  private_subnet_address_prefix = ["10.1.5.0/29"]
 
   # To enable Azure Defender for database set `enable_threat_detection_policy` to true 
   enable_threat_detection_policy = true
