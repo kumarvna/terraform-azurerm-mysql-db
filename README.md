@@ -20,7 +20,7 @@ Azure Database for MySQL is easy to set up, manage and scale. It automates theâ€
 ```hcl
 module "mysql-db" {
   source  = "kumarvna/mysql-db/azurerm"
-  version = "1.0.0"
+  version = "1.1.0"
 
   # By default, this module will create a resource group
   # proivde a name to use an existing resource group and set the argument 
@@ -182,7 +182,7 @@ Advanced Threat Detection for Azure Database for MySQL server detects anomalous 
 
 By default, this feature not enabled on this module. Enable threat detection policy setting up the variables `enable_threat_detection_policy`, `log_retention_days` and `email_addresses_for_alerts` with valid values.
 
->Note: Enabling `extended_auditing_policy` and `threat_detection_policy` features on SQL servers and database going to create a storage account to keep all audit logs. Log retention policy to be configured to keep the size within limits for this storage account. Note that this module creates resources that can cost money
+>Note: Enabling `threat_detection_policy` features on SQL servers and database going to create a storage account to keep all audit logs. Log retention policy to be configured to keep the size within limits for this storage account. Note that this module creates resources that can cost money.
 
 ### Private Link to Azure Database for MySQL
 
