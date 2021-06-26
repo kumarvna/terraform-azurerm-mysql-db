@@ -67,6 +67,21 @@ variable "mysqlserver_settings" {
   })
 }
 
+variable "create_mode" {
+  description = "The creation mode. Can be used to restore or replicate existing servers. Possible values are `Default`, `Replica`, `GeoRestore`, and `PointInTimeRestore`. Defaults to `Default`"
+  default     = "Default"
+}
+
+variable "creation_source_server_id" {
+  description = "For creation modes other than `Default`, the source server ID to use."
+  default     = null
+}
+
+variable "restore_point_in_time" {
+  description = "When `create_mode` is `PointInTimeRestore`, specifies the point in time to restore from `creation_source_server_id`"
+  default     = null
+}
+
 variable "storage_account_name" {
   description = "The name of the storage account name"
   default     = null

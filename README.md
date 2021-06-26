@@ -37,6 +37,10 @@ module "mysql-db" {
     sku_name   = "GP_Gen5_16"
     storage_mb = 5120
     version    = "5.7"
+    # default admin user `sqladmin` and can be specified as per the choice here
+    # by default random password created by this module. required password can be specified here
+    admin_username = "sqladmin"
+    admin_password = "H@Sh1CoR3!"
     # Database name, charset and collection arguments  
     database_name = "demomysqldb"
     charset       = "utf8"
@@ -104,6 +108,12 @@ module "mysql-db" {
   }
 }
 ```
+
+## Default Local Administrator and the Password
+
+This module utilizes __`sqladmin`__ as a local administrator on MySQL server. If you want to you use custom username, then specify the same by setting up the argument `admin_username` with a valid user string.
+
+By default, this module generates a strong password for MySQL server also allows you to change the length of the random password (currently 24) using the `random_password_length` variable. If you want to set the custom password, specify the argument `admin_password` with a valid string.
 
 ## `mysql_setttings` - Setting up your MySQL Server
 
@@ -237,6 +247,9 @@ An effective naming convention assembles resource names by using important resou
 `admin_password`|The Password which should be used for the local-administrator on this SQL Server|string|`null`
 `identity`|If you want your SQL Server to have an managed identity. Defaults to false|string|`false`
 `mysqlserver_settings`|MySQL server settings|object({})|`{}`
+`create_mode`|The creation mode. Can be used to restore or replicate existing servers. Possible values are `Default`, `Replica`, `GeoRestore`, and `PointInTimeRestore`|string|`Default`
+`creation_source_server_id`|For creation modes other than `Default`, the source server ID to use|string|`null`
+`restore_point_in_time`|When `create_mode` is `PointInTimeRestore`, specifies the point in time to restore from `creation_source_server_id`|string|`null`
 `storage_account_name`|The name of the storage account name|string|`null`
 `enable_threat_detection_policy`|Threat detection policy configuration, known in the API as Server Security Alerts Policy|string|`false`
 `email_addresses_for_alerts`|Account administrators email for alerts|`list(any)`|`""`
