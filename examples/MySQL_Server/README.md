@@ -18,14 +18,14 @@ module "mysql-db" {
   location              = "westeurope"
 
   # MySQL Server and Database settings
-  mysqlserver_name = "roshmysqldbsrv01"
+  mysqlserver_name = "mysqldbsrv01"
 
   mysqlserver_settings = {
     sku_name   = "GP_Gen5_16"
     storage_mb = 5120
     version    = "5.7"
     # Database name, charset and collection arguments  
-    database_name = "roshydemomysqldb"
+    database_name = "demomysqldb"
     charset       = "utf8"
     collation     = "utf8_unicode_ci"
     # Storage Profile and other optional arguments

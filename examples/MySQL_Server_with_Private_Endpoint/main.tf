@@ -11,14 +11,14 @@ module "mysql-db" {
   location              = "westeurope"
 
   # MySQL Server and Database settings
-  mysqlserver_name = "roshmysqldbsrv01"
+  mysqlserver_name = "mysqldbsrv01"
 
   mysqlserver_settings = {
     sku_name   = "GP_Gen5_16"
     storage_mb = 5120
     version    = "5.7"
     # Database name, charset and collection arguments  
-    database_name = "roshydemomysqldb"
+    database_name = "demomysqldb"
     charset       = "utf8"
     collation     = "utf8_unicode_ci"
     # Storage Profile and other optional arguments
@@ -49,7 +49,7 @@ module "mysql-db" {
   enable_private_endpoint       = true
   virtual_network_name          = "vnet-shared-hub-westeurope-001"
   private_subnet_address_prefix = ["10.1.5.0/29"]
-  existing_private_dns_zone     = "roshinidemozone.com"
+  existing_private_dns_zone     = "demo.example.com"
 
   # To enable Azure Defender for database set `enable_threat_detection_policy` to true 
   enable_threat_detection_policy = true
