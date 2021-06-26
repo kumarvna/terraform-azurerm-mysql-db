@@ -24,6 +24,10 @@ module "mysql-db" {
     sku_name   = "GP_Gen5_16"
     storage_mb = 5120
     version    = "5.7"
+    # default admin user `sqladmin` and can be specified as per the choice here
+    # by default random password created by this module. required password can be specified here
+    admin_username = "sqladmin"
+    admin_password = "H@Sh1CoR3!"
     # Database name, charset and collection arguments  
     database_name = "demomysqldb"
     charset       = "utf8"

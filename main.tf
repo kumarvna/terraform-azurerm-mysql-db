@@ -94,6 +94,9 @@ resource "azurerm_mysql_server" "main" {
   public_network_access_enabled     = var.mysqlserver_settings.public_network_access_enabled
   ssl_enforcement_enabled           = var.mysqlserver_settings.ssl_enforcement_enabled
   ssl_minimal_tls_version_enforced  = var.mysqlserver_settings.ssl_minimal_tls_version_enforced
+  create_mode                       = var.create_mode
+  creation_source_server_id         = var.create_mode != "Default" ? var.creation_source_server_id : null
+  restore_point_in_time             = var.create_mode == "PointInTimeRestore" ? var.restore_point_in_time : null
   tags                              = merge({ "Name" = format("%s", var.mysqlserver_name) }, var.tags, )
 
   dynamic "identity" {
