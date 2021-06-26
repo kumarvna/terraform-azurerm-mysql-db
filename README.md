@@ -69,7 +69,7 @@ module "mysql-db" {
   enable_private_endpoint       = true
   virtual_network_name          = "vnet-shared-hub-westeurope-001"
   private_subnet_address_prefix = ["10.1.5.0/29"]
-  existing_private_dns_zone     = "demo.example.com"
+  #  existing_private_dns_zone     = "demo.example.com"
 
   # To enable Azure Defender for database set `enable_threat_detection_policy` to true 
   enable_threat_detection_policy = true
