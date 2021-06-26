@@ -12,11 +12,13 @@ Azure Database for MySQL is easy to set up, manage and scale. It automates theâ€
 * [MySQL Customer Managed Key](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_server_key)
 * [MySQL Virtual Network Rule](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_virtual_network_rule)
 * [MySQL Diagnostics](https://docs.microsoft.com/en-us/azure/azure-sql/database/metrics-diagnostic-telemetry-logging-streaming-export-configure?tabs=azure-portal)
+* [Private Endpoints](https://www.terraform.io/docs/providers/azurerm/r/private_endpoint.html)
+* [Private DNS zone for `privatelink` A records](https://www.terraform.io/docs/providers/azurerm/r/private_dns_zone.html)
 
 ## Module Usage
 
 ```hcl
-module "mssql-server" {
+module "mysql-db" {
   source  = "kumarvna/mysql-db/azurerm"
   version = "1.0.0"
 
@@ -60,6 +62,14 @@ module "mssql-server" {
 
   # The URL to a Key Vault custom managed key
   key_vault_key_id = var.key_vault_key_id
+
+  # Creating Private Endpoint requires, VNet name and address prefix to create a subnet
+  # By default this will create a `privatelink.mysql.database.azure.com` DNS zone. 
+  # To use existing private DNS zone specify `existing_private_dns_zone` with valid zone name
+  enable_private_endpoint       = true
+  virtual_network_name          = "vnet-shared-hub-westeurope-001"
+  private_subnet_address_prefix = ["10.1.5.0/29"]
+  existing_private_dns_zone     = "roshinidemozone.com"
 
   # To enable Azure Defender for database set `enable_threat_detection_policy` to true 
   enable_threat_detection_policy = true
@@ -138,6 +148,8 @@ A few Supported parameters are here for your reference. you can find all these `
 
 A virtual network rule for your Azure Database for MySQL server is a subnet that is listed in the access control list (ACL) of your Azure Database for MySQL server. To be in the ACL for your Azure Database for MySQL server, the subnet must contain the **`Microsoft.Sql`** type name. To enable this feature, add a `subnet_id` with valid resource id.
 
+>This feature is only available for Azure Database for MySQL servers in the General Purpose or Memory Optimized pricing tiers. Ensure the database server is in one of these pricing tiers.
+
 ### Data Encryption with a Customer-managed Key
 
 Data encryption with customer-managed keys for Azure Database for MySQL enables you to bring your own key (BYOK) for data protection at rest. It also allows organizations to implement separation of duties in the management of keys and data.
@@ -146,11 +158,15 @@ Data encryption is set at the server-level. The customer-managed key is an asymm
 
 ### Server Firewall Rules
 
-Firewalls prevent all access to your database server until you specify which computers have permission. To configure a firewall, create firewall rules that specify ranges of acceptable IP addresses. You can create firewall rules at the server level with variable `firewall_rules` with valid IP addresses.
+Firewalls prevent all access to your database server until you specify which computers have permission. To configure a firewall, create firewall rules that specify ranges of acceptable IP addresses.
 
-### Active Directory Administrator
+By default, no external access to your MySQL Database will be allowed until you explicitly assign permission by creating a firewall rule. To add the firewall rules to the MySQL database, specify the list of `firewall_rules` with valid IP addresses.
 
-This module supports for Azure Active Directory (Azure AD) integration for Azure Database for MySQL. This integration allows you to securely sign in to their database by using Azure Active Directory and to manage credentials in a central place. For consistent role management, manage database access using Active Directory groups. You can add AD user/group using `ad_admin_login_name` variable.  
+### Adding Active Directory Administrator to SQL Database
+
+Azure Active Directory authentication is a mechanism of connecting to Microsoft Azure database for MySQL by using identities in Azure Active Directory (Azure AD). This module adds the provided Azure Active Directory user/group to MySQL Database as an administrator so that the user can login to this database with Azure AD authentication.
+
+By default, this feature not enabled on this module. To add the Active Directory Administrator, set the argument `ad_admin_login_name` with a valid Azure AD user/group login name.  
 
 > Azure Active Directory authentication is only available for MySQL 5.7 and newer. Only one Azure AD administrator can be configured for a Azure Database for MySQL server at any time. Only an Azure AD administrator for MySQL can initially connect to the Azure Database for MySQL using an Azure Active Directory account.
 
@@ -164,7 +180,23 @@ Advanced Threat Detection for Azure Database for MySQL server detects anomalous 
 * Access from a potentially harmful application
 * Brute force login credentials
 
-Enable threat detection policy setting up the variables `enable_threat_detection_policy`, `log_retention_days` and `email_addresses_for_alerts` with valid values.
+By default, this feature not enabled on this module. Enable threat detection policy setting up the variables `enable_threat_detection_policy`, `log_retention_days` and `email_addresses_for_alerts` with valid values.
+
+> #### Note: Enabling `extended_auditing_policy` and `threat_detection_policy` features on SQL servers and database going to create a storage account to keep all audit logs. Log retention policy to be configured to keep the size within limits for this storage account. Note that this module creates resources that can cost money
+
+### Private Link to Azure Database for MySQL
+
+Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet, effectively bringing the service into your VNet.
+
+With Private Link, Microsoft offering the ability to associate a logical server to a specific private IP address (also known as private endpoint) within the VNet. This module helps to implement Failover Groups using private endpoint for SQL Database instead of the public endpoint thus ensuring that customers can get security benefits that it offers.
+
+Clients can connect to the Private endpoint from the same VNet, peered VNet in same region, or via VNet-to-VNet connection across regions. Additionally, clients can connect from on-premises using ExpressRoute, private peering, or VPN tunneling.
+
+By default, this feature not enabled on this module. To create private link with private endpoints set the variable `enable_private_endpoint` to `true` and provide `virtual_network_name`, `private_subnet_address_prefix` with a valid values. You can also use the existing private DNS zone to create DNS records. To use this feature, set the `existing_private_dns_zone` with a valid existing private DNS zone name.
+
+For more details: [Private Link for Azure Database for MySQL](https://docs.microsoft.com/en-us/azure/mysql/concepts-data-access-security-private-link)
+
+> The private link feature is only available for Azure Database for MySQL servers in the General Purpose or Memory Optimized pricing tiers. Ensure the database server is in one of these pricing tiers.
 
 ## Recommended naming and tagging conventions
 
@@ -215,6 +247,10 @@ firewall_rules|Range of IP addresses to allow firewall connections|map(object({}
 `ad_admin_login_name`|The login name of the principal to set as the server administrator|string|`null`
 `key_vault_key_id`|The URL to a Key Vault custom managed key|string|`null`
 `extaudit_diag_logs`|Database Monitoring Category details for Azure Diagnostic setting|list(string)|`["MySqlSlowLogs", "MySqlAuditLogs"]`
+`enable_private_endpoint`|Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link|string|`"false"`
+`virtual_network_name` | The name of the virtual network|string|`""`
+`private_subnet_address_prefix`|A list of subnets address prefixes inside virtual network| list |`[]`
+`existing_private_dns_zone`|Name of the existing private DNS zone|string|`null`
 `Tags` | A map of tags to add to all resources | map | `{}`
 
 ## Outputs
@@ -224,6 +260,10 @@ firewall_rules|Range of IP addresses to allow firewall connections|map(object({}
 `mysql_server_id`|The resource ID of the MySQL Server
 `mysql_server_fqdn`|The FQDN of the MySQL Server
 `mysql_database_id`|The resource ID of the MySQL Database
+`mysql_server_private_endpoint`|id of the MySQL server Private Endpoint
+`mysql_server_private_dns_zone_domain`|DNS zone name of MySQL server Private endpoints DNS name records
+`mysql_server_private_endpoint_ip`|MySQL server private endpoint IPv4 Addresses
+`mysql_server_private_endpoint_fqdn`|MySQL server private endpoint FQDN Addresses
 
 ## Resource Graph
 

@@ -33,3 +33,22 @@ output "mysql_database_id" {
   value       = azurerm_mysql_database.main.id
 }
 
+output "mysql_server_private_endpoint" {
+  description = "id of the MySQL server Private Endpoint"
+  value       = var.enable_private_endpoint ? element(concat(azurerm_private_endpoint.pep1.*.id, [""]), 0) : null
+}
+
+output "mysql_server_private_dns_zone_domain" {
+  description = "DNS zone name of MySQL server Private endpoints dns name records"
+  value       = var.existing_private_dns_zone == null && var.enable_private_endpoint ? element(concat(azurerm_private_dns_zone.dnszone1.*.name, [""]), 0) : var.existing_private_dns_zone
+}
+
+output "mysql_server_private_endpoint_ip" {
+  description = "MySQL server private endpoint IPv4 Addresses "
+  value       = var.enable_private_endpoint ? element(concat(data.azurerm_private_endpoint_connection.private-ip1.*.private_service_connection.0.private_ip_address, [""]), 0) : null
+}
+
+output "mysql_server_private_endpoint_fqdn" {
+  description = "MySQL server private endpoint FQDN Addresses "
+  value       = var.enable_private_endpoint ? element(concat(azurerm_private_dns_a_record.arecord1.*.fqdn, [""]), 0) : null
+}
