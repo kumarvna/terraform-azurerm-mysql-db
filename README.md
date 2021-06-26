@@ -148,7 +148,7 @@ A few Supported parameters are here for your reference. you can find all these `
 
 A virtual network rule for your Azure Database for MySQL server is a subnet that is listed in the access control list (ACL) of your Azure Database for MySQL server. To be in the ACL for your Azure Database for MySQL server, the subnet must contain the **`Microsoft.Sql`** type name. To enable this feature, add a `subnet_id` with valid resource id.
 
->This feature is only available for Azure Database for MySQL servers in the General Purpose or Memory Optimized pricing tiers. Ensure the database server is in one of these pricing tiers.
+>This feature is available in all regions of Azure where Azure Database for MySQL is deployed for General Purpose and Memory Optimized servers. In case of VNet peering, if traffic is flowing through a common VNet Gateway with service endpoints and is supposed to flow to the peer, please create an ACL/VNet rule to allow Azure Virtual Machines in the Gateway VNet to access the Azure Database for MySQL server.
 
 ### Data Encryption with a Customer-managed Key
 
@@ -168,7 +168,7 @@ Azure Active Directory authentication is a mechanism of connecting to Microsoft 
 
 By default, this feature not enabled on this module. To add the Active Directory Administrator, set the argument `ad_admin_login_name` with a valid Azure AD user/group login name.  
 
-> Azure Active Directory authentication is only available for MySQL 5.7 and newer. Only one Azure AD administrator can be configured for a Azure Database for MySQL server at any time. Only an Azure AD administrator for MySQL can initially connect to the Azure Database for MySQL using an Azure Active Directory account.
+>Azure Active Directory authentication is only available for MySQL 5.7 and newer. Only one Azure AD administrator can be configured for a Azure Database for MySQL server at any time. Only an Azure AD administrator for MySQL can initially connect to the Azure Database for MySQL using an Azure Active Directory account.
 
 ### Threat detection policy AKA Server Security Alerts Policy
 
@@ -182,7 +182,7 @@ Advanced Threat Detection for Azure Database for MySQL server detects anomalous 
 
 By default, this feature not enabled on this module. Enable threat detection policy setting up the variables `enable_threat_detection_policy`, `log_retention_days` and `email_addresses_for_alerts` with valid values.
 
-> #### Note: Enabling `extended_auditing_policy` and `threat_detection_policy` features on SQL servers and database going to create a storage account to keep all audit logs. Log retention policy to be configured to keep the size within limits for this storage account. Note that this module creates resources that can cost money
+>Note: Enabling `extended_auditing_policy` and `threat_detection_policy` features on SQL servers and database going to create a storage account to keep all audit logs. Log retention policy to be configured to keep the size within limits for this storage account. Note that this module creates resources that can cost money
 
 ### Private Link to Azure Database for MySQL
 
@@ -196,14 +196,14 @@ By default, this feature not enabled on this module. To create private link with
 
 For more details: [Private Link for Azure Database for MySQL](https://docs.microsoft.com/en-us/azure/mysql/concepts-data-access-security-private-link)
 
-> The private link feature is only available for Azure Database for MySQL servers in the General Purpose or Memory Optimized pricing tiers. Ensure the database server is in one of these pricing tiers.
+>The private link feature is only available for Azure Database for MySQL servers in the General Purpose or Memory Optimized pricing tiers. Ensure the database server is in one of these pricing tiers.
 
 ## Recommended naming and tagging conventions
 
 Applying tags to your Azure resources, resource groups, and subscriptions to logically organize them into a taxonomy. Each tag consists of a name and a value pair. For example, you can apply the name `Environment` and the value `Production` to all the resources in production.
 For recommendations on how to implement a tagging strategy, see Resource naming and tagging decision guide.
 
-> **Important** :
+>**Important** :
 Tag names are case-insensitive for operations. A tag with a tag name, regardless of the casing, is updated or retrieved. However, the resource provider might keep the casing you provide for the tag name. You'll see that casing in cost reports. **Tag values are case-sensitive.**
 
 An effective naming convention assembles resource names by using important resource information as parts of a resource's name. For example, using these [recommended naming conventions](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging#example-names), a public IP resource for a production SharePoint workload is named like this: `pip-sharepoint-prod-westus-001`.
