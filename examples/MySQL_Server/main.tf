@@ -1,13 +1,6 @@
-# Azure Database for MySQL Terraform Module
-
-Azure Database for MySQL is easy to set up, manage and scale. It automates the management and maintenance of your infrastructure and database server, including routine updates, backups and security. Enjoy maximum control of database management with custom maintenance windows and multiple configuration parameters for fine grained tuning with Flexible Server (Preview).
-
-## Module Usage
-
-```hcl
-module "mssql-server" {
+module "mysql-db" {
   source  = "kumarvna/mysql-db/azurerm"
-  version = "1.0.0"
+  version = "1.1.0"
 
   # By default, this module will create a resource group
   # proivde a name to use an existing resource group and set the argument 
@@ -18,14 +11,14 @@ module "mssql-server" {
   location              = "westeurope"
 
   # MySQL Server and Database settings
-  mysqlserver_name = "roshmysqldbsrv01"
+  mysqlserver_name = "mysqldbsrv01"
 
   mysqlserver_settings = {
     sku_name   = "GP_Gen5_16"
     storage_mb = 5120
     version    = "5.7"
     # Database name, charset and collection arguments  
-    database_name = "roshydemomysqldb"
+    database_name = "demomysqldb"
     charset       = "utf8"
     collation     = "utf8_unicode_ci"
     # Storage Profile and other optional arguments
@@ -82,18 +75,3 @@ module "mssql-server" {
     Owner       = "test-user"
   }
 }
-```
-
-## Terraform Usage
-
-To run this example you need to execute following Terraform commands
-
-```hcl
-terraform init
-
-terraform plan
-
-terraform apply
-```
-
-Run `terraform destroy` when you don't need these resources.

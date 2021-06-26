@@ -1,6 +1,7 @@
-module "mssql-server" {
+module "mysql-db" {
   source  = "kumarvna/mysql-db/azurerm"
-  version = "1.0.0"
+  version = "1.1.0"
+
 
   # By default, this module will create a resource group
   # proivde a name to use an existing resource group and set the argument 
@@ -11,14 +12,14 @@ module "mssql-server" {
   location              = "westeurope"
 
   # MySQL Server and Database settings
-  mysqlserver_name = "roshmysqldbsrv01"
+  mysqlserver_name = "mysqldbsrv01"
 
   mysqlserver_settings = {
     sku_name   = "GP_Gen5_16"
     storage_mb = 5120
     version    = "5.7"
     # Database name, charset and collection arguments  
-    database_name = "roshydemomysqldb"
+    database_name = "demomysqldb"
     charset       = "utf8"
     collation     = "utf8_unicode_ci"
     # Storage Profile and other optional arguments
@@ -42,6 +43,14 @@ module "mssql-server" {
 
   # The URL to a Key Vault custom managed key
   key_vault_key_id = var.key_vault_key_id
+
+  # Creating Private Endpoint requires, VNet name and address prefix to create a subnet
+  # By default this will create a `privatelink.mysql.database.azure.com` DNS zone. 
+  # To use existing private DNS zone specify `existing_private_dns_zone` with valid zone name
+  enable_private_endpoint       = true
+  virtual_network_name          = "vnet-shared-hub-westeurope-001"
+  private_subnet_address_prefix = ["10.1.5.0/29"]
+  #  existing_private_dns_zone     = "demo.example.com"
 
   # To enable Azure Defender for database set `enable_threat_detection_policy` to true 
   enable_threat_detection_policy = true
