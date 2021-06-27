@@ -15,7 +15,7 @@ variable "location" {
 
 variable "subnet_id" {
   description = "The resource ID of the subnet"
-  default     = ""
+  default     = null
 }
 
 variable "log_analytics_workspace_name" {
