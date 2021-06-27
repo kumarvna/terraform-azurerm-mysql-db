@@ -2,7 +2,7 @@
 
 Azure Database for MySQL is easy to set up, manage and scale. It automates the management and maintenance of your infrastructure and database server, including routine updates, backups and security. Enjoy maximum control of database management with custom maintenance windows and multiple configuration parameters for fine grained tuning with Flexible Server (Preview).
 
-## Resources are supported
+## Resources supported
 
 * [MySQL Servers](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_server)
 * [MySQL Database](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_database)
@@ -198,9 +198,7 @@ By default, this feature not enabled on this module. Enable threat detection pol
 
 Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet, effectively bringing the service into your VNet.
 
-With Private Link, Microsoft offering the ability to associate a logical server to a specific private IP address (also known as private endpoint) within the VNet. This module helps to implement Failover Groups using private endpoint for SQL Database instead of the public endpoint thus ensuring that customers can get security benefits that it offers.
-
-Clients can connect to the Private endpoint from the same VNet, peered VNet in same region, or via VNet-to-VNet connection across regions. Additionally, clients can connect from on-premises using ExpressRoute, private peering, or VPN tunneling.
+With Private Link, Microsoft offering the ability to associate a logical server to a specific private IP address (also known as private endpoint) within the VNet. Clients can connect to the Private endpoint from the same VNet, peered VNet in same region, or via VNet-to-VNet connection across regions. Additionally, clients can connect from on-premises using ExpressRoute, private peering, or VPN tunneling.
 
 By default, this feature not enabled on this module. To create private link with private endpoints set the variable `enable_private_endpoint` to `true` and provide `virtual_network_name`, `private_subnet_address_prefix` with a valid values. You can also use the existing private DNS zone to create DNS records. To use this feature, set the `existing_private_dns_zone` with a valid existing private DNS zone name.
 
@@ -256,7 +254,7 @@ An effective naming convention assembles resource names by using important resou
 `disabled_alerts`|Specifies an array of alerts that are disabled. Allowed values are: `Sql_Injection`, `Sql_Injection_Vulnerability`, `Access_Anomaly`, `Data_Exfiltration`, `Unsafe_Action`|list(any)|`[]`
 `log_retention_days`|Specifies the number of days to keep in the Threat Detection audit logs|number|`30`
 `mysql_configuration`|Sets a MySQL Configuration value on a MySQL Server|map(string)|`{}`
-firewall_rules|Range of IP addresses to allow firewall connections|map(object({}))|`null`
+`firewall_rules`|Range of IP addresses to allow firewall connections|map(object({}))|`null`
 `ad_admin_login_name`|The login name of the principal to set as the server administrator|string|`null`
 `key_vault_key_id`|The URL to a Key Vault custom managed key|string|`null`
 `extaudit_diag_logs`|Database Monitoring Category details for Azure Diagnostic setting|list(string)|`["MySqlSlowLogs", "MySqlAuditLogs"]`
